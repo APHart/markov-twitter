@@ -160,12 +160,16 @@ def send_tweet(file_path):
         access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
         access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
 
-    print api.VerifyCredentials()
+    # print api.VerifyCredentials()
 
     #Generating text string from file
     input_text = open_and_read_file(input_path)
     #Creates Markov chain dictionary
     chains = make_chains(input_text, n)
+
+    print "This is the last tweet you posted:"
+    last_text = api.GetUserTimeline(user_id=918221167332270080,count=1)
+    print last_text(Text)
 
     while True:
 
@@ -179,7 +183,7 @@ def send_tweet(file_path):
             break
 
     status = api.PostUpdate(our_tweet)
-    print status.text
+    # print status.text
 
 
 input_path = sys.argv[1]
