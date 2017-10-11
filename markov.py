@@ -151,8 +151,9 @@ def make_twitter_ready(chains, n=2, is_song=False):
 
 
 def send_tweet(file_path):
-    """Takes a text string and tweets it."""
+    """Takes a file, creates Markov chain and posts as tweet."""
 
+    #Twitter app authentication
     api = twitter.Api(
         consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
         consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
@@ -161,11 +162,14 @@ def send_tweet(file_path):
 
     print api.VerifyCredentials()
 
+    #Generating text string from file
     input_text = open_and_read_file(input_path)
+    #Creates Markov chain dictionary
     chains = make_chains(input_text, n)
 
     while True:
 
+        #Formatting chain string for Twitter
         our_tweet = make_twitter_ready(chains, n, is_song)
         print our_tweet
         print
@@ -176,6 +180,7 @@ def send_tweet(file_path):
 
     status = api.PostUpdate(our_tweet)
     print status.text
+
 
 input_path = sys.argv[1]
 
@@ -189,13 +194,13 @@ try:
 except(IndexError):
     is_song = False
 
-# Open the file and turn it into one long string
-# input_text = open_and_read_file(input_path)
 
-# # Get a Markov chain
-# chains = make_chains(input_text, n)
+#calls send_tweet function in while loop to continue tweeting if desired.
+while True:
 
+    send_tweet(input_path)
 
-# make_twitter_ready(chains, n, is_song)
+    tweet_again = raw_input("Would you like to tweet again?(y/n) ")
 
-send_tweet(input_path)
+    if tweet_again.lower() != 'y':
+        break
